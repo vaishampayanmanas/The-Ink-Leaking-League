@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int @id @default(autoincrement())
+  username   String @unique
+  email      String @unique
+  password   String
+  goal       Int
+  role       Role
+  points     Points[]
+  challenges Challenge[]
+  responses  Response[]
+  reviews    Review[]
+  followers  User[] @relation("UserFollows")
+  following  User[] @relation("UserFollows")
+  sentMessages Message[] @relation("SentMessages")
+  recievedMessages Message[] @relation("ReceivedMessages")
+  sentFriendRequests FriendRequest[] @relation("SentFriendRequests")
+  recievedFriendRequests FriendRequest[] @relation("RecievedFriendRequests")
+  sessions Session[]
+
+  @@map("Users")
+}
+
+model Session {
+  id Int @id @default(autoincrement())
+  token String
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+  title String?
+  body String?
+  from User @relation("SentMessages", fields: [senderId], references: [id])
+  senderId Int
+  to User @relation("ReceivedMessages", fields: [recieverId], references: [id])
+  recieverId Int
+}
+
+model FriendRequest {
+  id Int @id @default(autoincrement())
+  from User @relation("SentFriendRequests", fields: [senderId], references: [id])
+  senderId Int
+  to User @relation("RecievedFriendRequests", fields: [recieverId], references: [id])
+  recieverId Int
+}
+
+model Response {
+  id          Int @id @default(autoincrement())
+  title       String
+  fileUrl     String
+  user        User @relation(fields: [userId], references: [id])
+  userId      Int
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  challengeId Int
+  reviews Review[]
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+  rating Int
+  review String
+  postedBy User @relation(fields: [postedById], references: [id])
+  postedById Int
+  response Response @relation(fields: [responseId], references: [id])
+  responseId Int
+}
+
+model Challenge {
+  id          Int @id @default(autoincrement())
+  title       String
+  description String
+  user        User @relation(fields: [userId], references: [id])
+  userId      Int
+  responses   Response[]
+}
+
+model Points {
+  id Int @id @default(autoincrement())
+  user User @relation(references: [id], fields: [userId])
+  userId Int
+  points Int
+  reason String
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  Member
+  Admin
+  Owner
+}
