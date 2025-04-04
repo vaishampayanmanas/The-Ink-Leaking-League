@@ -12,14 +12,14 @@ export default defineEventHandler(async (event) => {
         email,
         password: await bcrypt.hash(password, 12),
         goal: -1,
-        role: 'Owner'
+        role: 'Member'
       }
     });
 
     const accessToken = jwt.sign({
       username,
       userId: user.id,
-      access: 'owner'
+      access: user.role
     }, process.env.JWT_ACCESS_SECRET_KEY!, { expiresIn: '1h' });
 
     const refreshToken = jwt.sign({
