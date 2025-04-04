@@ -1,5 +1,6 @@
 <template>
     <h1 class="title">Welcome To The Ink Leaking League!</h1>
+    <!-- <h2>{{ asyncStatus }}</h2> -->
 
     <div class="form">
         <FormComp @submit="handleSubmit" :inputs="formInputs" />
@@ -55,6 +56,18 @@ $error-red: #E74C3C;
 </style>
 
 <script setup lang="ts">
+const userStore = useUsersStore()
+
+interface Res {
+    status: string,
+    data: any,
+    error: any
+}
+
+const res: Ref<{}> | Ref<Res> = ref({})
+
+// let state: any;
+// let asyncStatus: any;
 
 const formInputs = ref([
     {
@@ -79,7 +92,16 @@ const formInputs = ref([
     }
 ]);
 
-const handleSubmit = function (event: any) {
-    console.log(event);
+const handleSubmit = async function (event: any) {
+    // ({ state, asyncStatus } = useQuery({
+    //     key: ['test'],
+    //     query: () => fetch('/api/todos').then((res) => res.json())
+    // }));
+    res.value = await userStore.register({
+        username: event.username,
+        password: event.password1,
+        email: event.email,
+    })
+    console.log(res.value)
 }
 </script>

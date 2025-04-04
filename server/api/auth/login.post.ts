@@ -1,21 +1,24 @@
+import jwt from "jsonwebtoken"
 import prisma from "~/lib/prisma";
 import bcrypt from "bcryptjs";
-import jwt from 'jsonwebtoken'
 
 export default defineEventHandler(async (event) => {
-  const { username, email, password } = await readBody(event);
+  const body = await readBody(event)
+  const { username, password } = body
 
-  try {
-    const user = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: await bcrypt.hash(password, 12),
-        goal: -1,
-        role: 'Member'
-      }
-    });
+  // validate user credentials
+  const user = await prisma.user.findUnique({
+    where: { username }
+  });
+  if (!user) {
+    setResponseStatus(event, 400)
+    return {
+      status: 'fail',
+      message: 'Invalid username or password'
+    }
+  }
 
+  if (await bcrypt.compare(password, user.password)) {
     const accessToken = jwt.sign({
       username,
       userId: user.id,
@@ -50,11 +53,11 @@ export default defineEventHandler(async (event) => {
         role: user.role
       }
     }
-  } catch {
+  } else {
     setResponseStatus(event, 400)
     return {
       status: 'fail',
-      message: 'user exists'
+      message: 'Invalid username or password'
     }
   }
 })

@@ -55,6 +55,7 @@ $error-red: #E74C3C;
 </style>
 
 <script setup lang="ts">
+const userStore = useUsersStore();
 
 const formInputs = ref([
     {
@@ -70,6 +71,6 @@ const formInputs = ref([
 ]);
 
 const handleSubmit = function (event: any) {
-    console.log(event);
+    userStore.login(event.username, event.password)
 }
 </script>
