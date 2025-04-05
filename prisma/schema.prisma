@@ -28,8 +28,6 @@ model User {
   following  User[] @relation("UserFollows")
   sentMessages Message[] @relation("SentMessages")
   recievedMessages Message[] @relation("ReceivedMessages")
-  sentFriendRequests FriendRequest[] @relation("SentFriendRequests")
-  recievedFriendRequests FriendRequest[] @relation("RecievedFriendRequests")
   sessions Session[]
 
   @@map("Users")
@@ -47,19 +45,12 @@ model Message {
   id Int @id @default(autoincrement())
   title String?
   body String?
+  recieved Boolean @default(false)
   from User @relation("SentMessages", fields: [senderId], references: [id])
   senderId Int
   to User @relation("ReceivedMessages", fields: [recieverId], references: [id])
   recieverId Int
-}
-
-model FriendRequest {
-  id Int @id @default(autoincrement())
-  from User @relation("SentFriendRequests", fields: [senderId], references: [id])
-  senderId Int
-  to User @relation("RecievedFriendRequests", fields: [recieverId], references: [id])
-  recieverId Int
-}
+}   
 
 model Response {
   id          Int @id @default(autoincrement())

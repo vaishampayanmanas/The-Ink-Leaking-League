@@ -7,11 +7,26 @@
 </style>
 
 <script lang="ts" setup>
-const links = [{
+const userStore = useUsersStore()
+
+const links = ref([{
     to: '/',
     name: 'Home'
-}, {
-    to: '/auth/login',
-    name: 'login'
-}]
+}])
+
+if (userStore.accessToken) {
+    links.value.push({
+        to: '/auth/logout',
+        name: 'Logout'
+    })
+    links.value.push({
+        to: '/dashboard',
+        name: 'Dashboard'
+    })
+} else {
+    links.value.push({
+        to: '/auth/login',
+        name: 'Login'
+    })
+}
 </script>

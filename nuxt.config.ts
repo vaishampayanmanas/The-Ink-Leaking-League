@@ -5,5 +5,9 @@ export default defineNuxtConfig({
   modules: ['nuxt-file-storage', '@prisma/nuxt', '@pinia/nuxt', '@pinia/colada-nuxt'],
   fileStorage: {
     mount: 'C:/Users/Manas/OneDrive/Desktop/vscode projects/TheInkLeakingLeague/server/storage'
+  },
+  routeRules: {
+    '/dashboard/**': { ssr: false },
+    '/dashboard/': { ssr: false },
   }
 })
