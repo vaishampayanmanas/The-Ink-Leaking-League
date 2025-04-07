@@ -86,7 +86,8 @@ $error-red: #E74C3C;
 }
 
 .input--input:focus + .input--placeholder,
-.input--input:valid + .input--placeholder {
+.input--input:valid + .input--placeholder,
+.input--input[type="date"] + .input--placeholder {
     transform: translateY(-100%);
     font-size: 12px;
     color: $indigo;

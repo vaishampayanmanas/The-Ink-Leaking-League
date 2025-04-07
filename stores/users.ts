@@ -53,14 +53,14 @@ export const useUsersStore = defineStore('users', {
     },
 
     load() {
-      if (!localStorage) return;
       this.accessToken = localStorage.getItem('accessToken') || ''
       this.user = JSON.parse(localStorage.getItem('user') || 'null');
       this.loaded = true
     },
 
     async refreshAccessToken() {
-      const res = await $fetch('/api/auth/refresh', {
+      try {
+        const res = await $fetch('/api/auth/refresh', {
         method: 'GET',
         headers: {
           auth: this.accessToken
@@ -69,11 +69,13 @@ export const useUsersStore = defineStore('users', {
       if ('accessToken' in res && res.accessToken) {
         this.accessToken = res.accessToken
         this.user = res.user
-        this.save()
-      } else {
-        throw new Error('Invalid refresh token');
       }
+      this.save()
       return res
+      } catch {
+        throw new Error ('invalid access token')
+      }
+      
     },
 
     async login(username: string, password: string) {

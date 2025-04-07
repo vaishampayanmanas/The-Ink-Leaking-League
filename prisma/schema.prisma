@@ -21,7 +21,7 @@ model User {
   goal       Int
   role       Role
   points     Points[]
-  challenges Challenge[]
+  challengesCreated Challenge[]
   responses  Response[]
   reviews    Review[]
   followers  User[] @relation("UserFollows")
@@ -29,6 +29,7 @@ model User {
   sentMessages Message[] @relation("SentMessages")
   recievedMessages Message[] @relation("ReceivedMessages")
   sessions Session[]
+  challenges ChallengeParticipant[]
 
   @@map("Users")
 }
@@ -80,6 +81,9 @@ model Challenge {
   user        User @relation(fields: [userId], references: [id])
   userId      Int
   responses   Response[]
+  deadline    DateTime
+  participants ChallengeParticipant[]
+  createdAt   DateTime @default(now())
 }
 
 model Points {
@@ -95,4 +99,12 @@ enum Role {
   Member
   Admin
   Owner
+}
+
+model ChallengeParticipant {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  challenge Challenge @relation(fields: [challengeId], references: [id])
+  challengeId Int
 }

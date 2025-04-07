@@ -8,25 +8,35 @@
 
 <script lang="ts" setup>
 const userStore = useUsersStore()
-
 const links = ref([{
     to: '/',
     name: 'Home'
 }])
+if (import.meta.client) {
+    if (!userStore.loaded) {
+        userStore.load()
+    }
 
-if (userStore.accessToken) {
-    links.value.push({
-        to: '/auth/logout',
-        name: 'Logout'
-    })
-    links.value.push({
-        to: '/dashboard',
-        name: 'Dashboard'
-    })
-} else {
-    links.value.push({
-        to: '/auth/login',
-        name: 'Login'
-    })
+    if (userStore.accessToken) {
+        links.value.push({
+            to: '/auth/logout',
+            name: 'Logout'
+        })
+        links.value.push({
+            to: '/challenges',
+            name: 'Challenges'
+        })
+        links.value.push({
+            to: '/dashboard',
+            name: 'Dashboard'
+        })
+    } else {
+        links.value.push({
+            to: '/auth/login',
+            name: 'Login'
+        })
+    }
 }
+
+
 </script>

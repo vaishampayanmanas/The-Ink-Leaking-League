@@ -106,7 +106,7 @@ const stats = ref([
   {
     name: 'Challenges',
     quantity: user.value.challenges.length,
-    link: '/dashboard/challenges'
+    link: '/challenges'
   },
   {
     name: 'responses',

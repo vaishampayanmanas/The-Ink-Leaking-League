@@ -31,10 +31,20 @@ export default defineEventHandler(async (event) => {
           points: true
         }
       },
-      challenges: {
+      challengesCreated: {
         select: {
           title: true,
           description: true,
+        }
+      },
+      challenges: {
+        include: {
+          challenge: {
+            select: {
+              title: true
+              
+            }
+          }
         }
       },
       responses: {

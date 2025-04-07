@@ -6,7 +6,9 @@
         </div>
 
         <div class="navbar--links">
-            <NuxtLink v-for="link in links" :to="link.to" class="navbar--links__link">{{ link.name }}</NuxtLink>
+            <Client-only>
+                <NuxtLink v-for="link in links" :to="link.to" class="navbar--links__link">{{ link.name }}</NuxtLink>
+            </Client-only>
         </div>
     </div>
 </template>
