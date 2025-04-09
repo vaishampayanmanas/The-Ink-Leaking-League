@@ -38,13 +38,8 @@ export default defineEventHandler(async (event) => {
         }
       },
       challenges: {
-        include: {
-          challenge: {
-            select: {
-              title: true
-              
-            }
-          }
+        select: {
+          title: true,
         }
       },
       responses: {

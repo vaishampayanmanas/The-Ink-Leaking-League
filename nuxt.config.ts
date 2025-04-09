@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['nuxt-file-storage', '@prisma/nuxt', '@pinia/nuxt', '@pinia/colada-nuxt'],
   fileStorage: {
-    mount: 'C:/Users/Manas/OneDrive/Desktop/vscode projects/TheInkLeakingLeague/server/storage'
+    mount: 'C:/Users/Manas/OneDrive/Desktop/vscode projects/TheInkLeakingLeague/public'
   },
   routeRules: {
     '/dashboard/**': { ssr: false },

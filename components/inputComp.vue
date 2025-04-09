@@ -56,6 +56,7 @@ $error-red: #E74C3C;
         height: 2px;
         transform: scaleX(0);
         transition: transform 0.88s ease-in-out;
+        border-radius: 100%;
     }
 
     &--input {
