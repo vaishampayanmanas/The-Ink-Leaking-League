@@ -13,9 +13,7 @@ const links = ref([{
     name: 'Home'
 }])
 if (import.meta.client) {
-    if (!userStore.loaded) {
-        userStore.load()
-    }
+    userStore.load()
 
     if (userStore.accessToken) {
         links.value.push({

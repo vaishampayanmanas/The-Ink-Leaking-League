@@ -3,12 +3,14 @@
     <div class="challenge--overview">
       <div class="challenge--overview__challenge">
         <h2 class="challenge--overview__challenge____title">{{ challenge.title }}</h2>
+        <Client-Only>
         <p class="challenge--overview__challenge____title">due {{ (new Date(challenge.deadline)).toLocaleDateString(undefined, {
   weekday: 'long',
   day: '2-digit',
   month: 'long',
   year: 'numeric',
         }) }}</p>
+        </Client-Only>
       </div>
 
       <NuxtLink :to="`/challenges/${challenge.id}`">
@@ -55,6 +57,7 @@ $error-red: #E74C3C;
   font-family: 'Roboto Mono';
   border-radius: 30px;
   color: $ink;
+  margin-bottom: 20px;
 
   &--overview {
     background-color: $cool-grey;

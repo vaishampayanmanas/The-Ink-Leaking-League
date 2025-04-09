@@ -3,12 +3,17 @@
     <Sidebar :links="sidebarLinks" />
     <div class="dashboard--content">
       <div class="dshboard--content__heading">
-        <h1 class="dashboard--content__heading___title">Hello, {{ user.username }}!
-          <sup><span class="dashboard--content__heading___badge">{{ user.role }}</span></sup>
-        </h1>
+        <Client-Only>
+          <h1 class="dashboard--content__heading___title">Hello, {{ user.username }}!
+            <sup><span class="dashboard--content__heading___badge">{{ user.role }}</span></sup>
+          </h1>
+        </Client-Only>
+        
       </div>
       <div class="dashboard--content__stats">
+        <Client-Only>
         <Stats :stats="stats"/>
+        </Client-Only>
       </div>
   </div>
   </div>
@@ -29,17 +34,21 @@ const validTokenRes = await useFetch('/api/auth/verify', {
 });
 
 if (!validTokenRes.data.value?.validToken) {
-  const res = await userStore.refreshAccessToken()
-  if (res.status !== 'success') {
-    // Handle error
-    navigateTo({
-      path: '/auth/login',
-      query: {
-        redirect: '/dashboard'
+      try {
+        await userStore.refreshAccessToken()
+      } catch {
+        localStorage.setItem('accessToken', '');
+        localStorage.setItem('user', JSON.stringify(null));
+        navigateTo({
+        path: '/auth/login',
+        query: {
+          redirect: '/dashboard'
+        }
+      })
       }
-    })
-  }
-}
+      
+      
+    }
 let res;
 
 await (async () => {

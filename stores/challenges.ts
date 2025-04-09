@@ -29,27 +29,74 @@ export const useChallengesStore = defineStore('Challenges', {
         body
       });
       console.log(data);
-      this.loadChallenges()
+      await this.loadChallenges()
     },
 
-    async loadChallenges() {
-      const { data: challenges } = await useFetch('/api/challenges', {
+    async loadChallenges(reload: boolean = false) {
+      if (reload) {
+        const challenges = await $fetch('/api/challenges', {
+          method: 'GET'
+        });
+  
+        this.allChallenges = challenges || [];
+      } else {
+        const { data: challenges } = await useFetch('/api/challenges', {
         method: 'GET'
       });
 
       this.allChallenges = challenges.value || [];
+      }
     },
 
-    updateChallenge() {
+    async updateChallenge(id: number, body: any, accessToken: string) {
+      const res = await $fetch(`/api/challenges/${id}`, {
+        method: 'PATCH',
+        body,
+        headers: {
+          auth: accessToken,
+        }
+      });
 
+      if (res.status !== 'success') {
+        throw new Error('invalid request');
+      } else {
+        await this.loadChallenges(true);
+      }
     },
 
-    joinChallenge() {
+    async joinChallenge(id: number, accessToken: string) {
+      const res = await $fetch(`/api/challenges/${id}/join`, {
+        method: 'POST',
+        headers: {
+          auth: accessToken,
+        }
+      });
 
+      if (res.status !== 'success') {
+        throw new Error('invalid request');
+      } else {
+        await this.loadChallenges(true);
+        console.log('success!!')
+      }
     },
 
-    deleteChallenge() {
+    async deleteChallenge(id: number, body: {password: string}, accessToken: string) {
+      const res = await $fetch(`/api/challenges/${id}`, {
+        method: 'DELETE',
+        body,
+        headers: {
+          auth: accessToken,
+        }
+      });
 
+      console.log(res);
+
+      if (res) {
+        throw new Error('invalid request');
+      } else {
+        await this.loadChallenges(true);
+        navigateTo('/challenges')
+      }
     }
   }
 })

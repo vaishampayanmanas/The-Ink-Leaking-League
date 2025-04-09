@@ -9,8 +9,6 @@
     </div>
     <div class="challenges--form" v-show="formRendered">
       <form @submit.prevent="onSubmit()" class="challenges--form__form">
-        <!-- <input required type="text" v-model="title">
-        <input required type="date" v-model="deadline"> -->
         <InputComp v-model="title" type="text" placeholder="Challenge Title" required />
         <InputComp v-model="deadline" type="date" placeholder="Challenge Deadline" required />
         <textarea v-model="description" placeholder="Challenge description"></textarea>
@@ -27,6 +25,10 @@ const userStore = useUsersStore();
 
 if (!userStore.loaded && import.meta.client) {
   userStore.load();
+}
+
+if (import.meta.client) {
+  
   const validTokenRes = await useFetch('/api/auth/verify', {
     body: {
       auth: userStore.accessToken
@@ -37,6 +39,7 @@ if (!userStore.loaded && import.meta.client) {
     try {
       await userStore.refreshAccessToken();
     } catch {
+
       clearNuxtData('/auth/login');
       navigateTo('/auth/login');
     }
