@@ -30,6 +30,7 @@ const emit = defineEmits(['submit']);
 const submit = function () {
     const output = Object.getOwnPropertyNames(formOutputs).reduce((acc: Record<string, string>, val: string) => {
         acc[val] = formOutputs[val].value;
+        formOutputs[val].value = ''
         return acc
     }, {});
 

@@ -76,6 +76,7 @@ export const useChallengesStore = defineStore('Challenges', {
         throw new Error('invalid request');
       } else {
         await this.loadChallenges(true);
+        await navigateTo('/challenges');
         console.log('success!!')
       }
     },

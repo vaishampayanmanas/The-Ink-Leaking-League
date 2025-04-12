@@ -14,6 +14,8 @@
 </template>
 
 <script lang="ts" setup>
+import { toast } from 'vue-sonner'
+
 const userStore = useUsersStore()
 if (import.meta.client) {
   if (!userStore.loaded) {
@@ -70,18 +72,26 @@ const handleDrop = function (event: DragEvent) {
 }
 
 const handleSubmit = async function () {
-  const res = await $fetch(`/api/challenges/${route.params.id}/upload`, {
-    method: 'POST',
-    headers: {
-      auth: userStore.accessToken
-    },
-    body: {
-      file: files.value[0],
-      title: title.value
-    }
-  });
+  try {
+    const res = await $fetch(`/api/challenges/${route.params.id}/upload`, {
+      method: 'POST',
+      headers: {
+        auth: userStore.accessToken
+      },
+      body: {
+        file: files.value[0],
+        title: title.value
+      }
+    });
 
-  console.log(res);
+    toast.success('Challenge complete!')
+  } catch (error) {
+    if ((error as { statusCode: number }).statusCode === 418) {
+      toast.error('The server is a teapot and doesn\'t accept non-plain text. E.g. No Images or code/executables!')
+    } else {
+      toast.error('Upload failed! Make sure your responses have unique titles.')      
+    }
+  }
 }
 </script>
 

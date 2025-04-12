@@ -62,6 +62,8 @@ model Response {
   challenge   Challenge @relation(fields: [challengeId], references: [id])
   challengeId Int
   reviews Review[]
+
+  @@unique([userId, title, challengeId])
 }
 
 model Review {

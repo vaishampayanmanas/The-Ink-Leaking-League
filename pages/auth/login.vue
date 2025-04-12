@@ -55,6 +55,10 @@ $error-red: #E74C3C;
 </style>
 
 <script setup lang="ts">
+import { toast } from 'vue-sonner';
+
+const redirectPage = useRoute().query?.redirect;
+
 const userStore = useUsersStore();
 
 const formInputs = ref([
@@ -70,7 +74,18 @@ const formInputs = ref([
     }
 ]);
 
-const handleSubmit = function (event: any) {
-    userStore.login(event.username, event.password)
+const handleSubmit = async function (event: any) {
+    try {
+        await userStore.login(event.username, event.password);
+        toast.success('Successful login!');
+        if (redirectPage && typeof redirectPage === 'string') {
+            setTimeout(() => navigateTo(redirectPage), 1000);
+        } else {
+            setTimeout(() => navigateTo('/dashboard'), 1000);
+        }
+    } catch {
+        toast.error('Invalid credentials!')
+    }
+    
 }
 </script>

@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
   const { file, title } = await readBody<{ file: ServerFile, title: string }>(event);
 
-  const uploadName = `${challengeId}.${user.userId}.${title.replaceAll(':', '')}`
+  const uploadName = `${challengeId}.${user.userId}.${title.replaceAll(':', '').replaceAll('/', '').replaceAll(' ', '_')}`;
 
   if (!checkFileExt(file.name, ['.doc', '.docx', '.pdf', '.txt', '.rtf', '.pages', '.tex', 'wpd', '.abw'])) {
     setResponseStatus(event, 418);
@@ -41,9 +41,11 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  console.log(file.type);
+
   try {
     try {
-      await storeFileLocally(file, uploadName, '/responses');
+      await storeFileLocally(file, uploadName, '/challengeResponses');
     } catch {
       setResponseStatus(event, 409);
       return {
@@ -55,7 +57,7 @@ export default defineEventHandler(async (event) => {
     await prisma.response.create({
       data: {
         title,
-        fileUrl: `/responses/${uploadName}`,
+        fileUrl: `/challengeResponses/${uploadName}.${file.name.split('.').pop()}`,
         user: {
           connect: {
             id: Number(user.userId)
@@ -64,6 +66,21 @@ export default defineEventHandler(async (event) => {
         challenge: {
           connect: {
             id: challengeId
+          }
+        }
+      }
+    });
+
+    // award points
+    const pointsAwarded = challenge.userId == user.userId ? 1 : 3;
+
+    await prisma.points.create({
+      data: {
+        points: pointsAwarded,
+        reason: 'challenge completion',
+        user: {
+          connect: {
+            id: user.userId
           }
         }
       }

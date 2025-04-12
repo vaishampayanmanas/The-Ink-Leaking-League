@@ -86,7 +86,7 @@ export const useUsersStore = defineStore('users', {
           password
         }
       });
-      console.log(res);
+      console.log(res); 
       if ('accessToken' in res && res.accessToken) {
         this.accessToken = res.accessToken
         this.user = res.user

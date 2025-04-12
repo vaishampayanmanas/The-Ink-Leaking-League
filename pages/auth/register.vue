@@ -56,6 +56,8 @@ $error-red: #E74C3C;
 </style>
 
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 const userStore = useUsersStore()
 
 interface Res {
@@ -65,9 +67,6 @@ interface Res {
 }
 
 const res: Ref<{}> | Ref<Res> = ref({})
-
-// let state: any;
-// let asyncStatus: any;
 
 const formInputs = ref([
     {
@@ -93,15 +92,19 @@ const formInputs = ref([
 ]);
 
 const handleSubmit = async function (event: any) {
-    // ({ state, asyncStatus } = useQuery({
-    //     key: ['test'],
-    //     query: () => fetch('/api/todos').then((res) => res.json())
-    // }));
-    res.value = await userStore.register({
-        username: event.username,
-        password: event.password1,
-        email: event.email,
-    })
-    console.log(res.value)
+    try {
+        res.value = await userStore.register({
+                username: event.username,
+                password: event.password1,
+                email: event.email,
+            })
+
+        toast.success('Successfully registered!');
+        setTimeout(() => navigateTo('/dashboard'));
+    } catch {
+        toast.error('User already exists! Do you want to login?');
+    }
+
+    
 }
 </script>

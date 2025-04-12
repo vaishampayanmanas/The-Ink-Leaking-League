@@ -1,8 +1,9 @@
 <template>
   <div class="app">
-    <NuxtLayout>
-      <!-- <NuxtPage /> -->
-    </NuxtLayout>
+    <NuxtLayout />
     <NuxtPage />
+    <Client-Only>
+      <Toaster position="top-center" richColors />
+    </Client-Only>
   </div>
 </template>

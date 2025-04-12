@@ -6,7 +6,7 @@
       <div class="actions">
         <Client-Only>
         <button @click="onJoin()" v-if="!userInChallenge"><FontAwesomeIcon class="icon" :icon="['fas', 'right-to-bracket']" />Join</button>
-        <button v-else><i>Joined</i></button>
+        <button v-else><NuxtLink :to="`/challenges/${route.params.id}/upload`" ><FontAwesomeIcon class=icon :icon="['fas', 'upload']" />upload</NuxtLink></button>
           <button v-if="challengeOwner" @click="editFormRendered = true"><FontAwesomeIcon class="icon" :icon="['fas', 'pencil']" />Edit</button>
           <button v-if="challengeOwner" @click="deleteFormRendered = true"><FontAwesomeIcon class="icon" :icon="['fas', 'trash-can']" />Delete</button>
         </Client-Only>
@@ -46,6 +46,8 @@
 </template>
 
 <script lang="ts" setup>
+import { toast } from 'vue-sonner'
+
 const userStore = useUsersStore();
 const challengeStore = useChallengesStore();
 
@@ -102,34 +104,41 @@ const deleteFormRendered = ref(false);
 const onEdit = async function () {
   try {
     editFormRendered.value = false;
-    challengeStore.updateChallenge(Number(route.params.id), {
+    await challengeStore.updateChallenge(Number(route.params.id), {
       title: newTitle.value,
       description: newDescription.value,
       deadline: new Date(newDeadline!.value),
     }, userStore.accessToken)
     refreshChallenge();
-  } catch {
-    console.log('failed')
-  }
-}
-
-const onDelete = function () {
-  try {
-    editFormRendered.value = false;
-    challengeStore.deleteChallenge(Number(route.params.id), {
-      password: password.value
-    }, userStore.accessToken);
-  } catch {
-    console.log('failed')
-  }
-}
-
-const onJoin = function () {
-  try {
-    challengeStore.joinChallenge(Number(route.params.id), userStore.accessToken);
-    refreshChallenge();
+    toast.success('Edit completed successfully!');
+    
   } catch {
     console.log('failed');
+    toast.error('Edit failed!');
+  }
+}
+
+const onDelete = async function () {
+  try {
+    editFormRendered.value = false;
+    await challengeStore.deleteChallenge(Number(route.params.id), {
+      password: password.value
+    }, userStore.accessToken);
+    toast.success('Successfully deleted challenge!')
+  } catch {
+    console.log('failed')
+    toast.error('Failed to delete challenge');
+  }
+}
+
+const onJoin = async function () {
+  try {
+    await challengeStore.joinChallenge(Number(route.params.id), userStore.accessToken);
+    refreshChallenge();
+    toast.success('Successfully joinned challenge!');
+  } catch {
+    console.log('failed');
+    toast.error('Failed to join the challenge!');
   }
 }
 
@@ -139,10 +148,11 @@ if (challenge.value && 'participants' in challenge.value) {
 
 const userInChallenge = computed(() => {
   if (challenge.value && 'participants' in challenge.value) {
-    challenge.value.participants.includes({
-      username: userStore.user?.username || ''
-    })
-    return true
+    if (challenge.value.participants.map((obj) => obj.username).includes(userStore.user?.username || '')) {
+      return true;
+    }
+    console.log();
+    return false;
   } else {
     return false;
   }
@@ -284,5 +294,11 @@ input {
   &:focus {
     outline: 0;
   }
+}
+
+a {
+  text-decoration: none;
+  color: $ink;
+  color: $paper;
 }
 </style>

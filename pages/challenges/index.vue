@@ -20,6 +20,8 @@
 </template>
 
 <script lang="ts" setup>
+import { toast } from 'vue-sonner';
+
 const challengeStore = useChallengesStore();
 const userStore = useUsersStore();
 
@@ -41,7 +43,7 @@ if (import.meta.client) {
     } catch {
 
       clearNuxtData('/auth/login');
-      navigateTo('/auth/login');
+      navigateTo('/auth/login?redirect=/challenges');
     }
     
   }
@@ -57,12 +59,17 @@ const deadline = ref('');
 
 const onSubmit = async function () {
   formRendered.value = false;
-
-  await challengeStore.createChallenge({
-    title: title.value,
-    description: description.value,
-    deadline: deadline.value
-  }, userStore.accessToken);
+  try {
+    await challengeStore.createChallenge({
+      title: title.value,
+      description: description.value,
+      deadline: deadline.value
+    }, userStore.accessToken);
+    toast.success('Challenge created!');
+  } catch {
+    toast.error('Challenge creation failed! Please double check the challenge details.');
+  }
+  
 }
 </script>
 
