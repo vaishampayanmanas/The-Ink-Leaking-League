@@ -28,7 +28,6 @@ README.md
 tsconfig.json
 
 # some public files
-public/robots.txt
-public/favicon.ico
+public
 
 

@@ -144,4 +144,23 @@ div:hover > .uploadIcon {
   font-size: 1.2rem !important;
   color: $gold;
 }
+
+button {
+  border: 0;
+  padding: 10px 20px;
+  background-color: $paper;
+  color: $ink;
+  font-family: 'Roboto Mono';
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color 0.7s;
+  margin-top: 20px;
+  width: 100%;
+  font-weight: bold;
+  display: block;
+  &:hover {
+    color: $gold;
+  }
+}
 </style>

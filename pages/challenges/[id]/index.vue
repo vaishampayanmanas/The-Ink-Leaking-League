@@ -22,6 +22,14 @@
       <h3 class="description--title">Description</h3>
       <p class="description" v-if="challenge && 'description' in challenge">{{ challenge.description }}</p>
 
+      <h3 class="description--title">Responses</h3>
+      <div class="responses">
+        <p class="responses--response" v-if="challenge && 'responses' in challenge && challenge.responses" v-for="res in challenge.responses" :key="res.id">
+          <NuxtLink :to="`/responses/${res.id}`">{{ res.title }}</NuxtLink>
+        </p>
+        <p class="responses--fallback" v-if="challenge && 'responses' in challenge && challenge.responses && !challenge.responses.length">No responses yet.</p>
+      </div>
+
       <div class="challenges--form" v-show="editFormRendered">
       <form @submit.prevent="onEdit()" class="challenges--form__form">
         <InputComp v-if="challenge && 'title' in challenge" v-model="newTitle" type="text" placeholder="Challenge Title" required />
@@ -81,6 +89,7 @@ interface Challenge {
   createdAt: Date;
   user: { username: string };
   participants: { username: string }[];
+  responses?: { id: number; title: string }[]; // Added fileUrl to responses property
 }
 
 const route = useRoute();
@@ -300,5 +309,37 @@ a {
   text-decoration: none;
   color: $ink;
   color: $paper;
+}
+
+.responses {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &--response {
+    padding: 10px 20px;
+    font-size: 14px; /* Specify a font size */
+    background-color: $cool-grey;
+    border-radius: 20px;
+    font-family: 'Roboto Mono';
+
+    &:hover a {
+      color: $gold;
+      text-decoration: underline;
+    }
+
+    a {
+      color: $ink;
+      transition: color 0.5s;
+    }
+  }
+
+  &--fallback {
+    padding: 10px 20px;
+    font-size: 16px; /* Specify a font size */
+    font-weight: 600;
+    color: $error-red;
+    font-family: 'Roboto Mono';
+  }
 }
 </style>

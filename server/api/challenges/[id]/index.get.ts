@@ -20,6 +20,12 @@ export default defineEventHandler(async (event) => {
           username: true
         }
       },
+      responses: {
+        select: {
+          title: true,
+          id: true,
+        }
+      },
       user: {
         select: {
           username: true

@@ -18,6 +18,13 @@ export default defineEventHandler(async (event) => {
         select: {
           review: true,
           rating: true,
+          id: true,
+          postedBy: {
+            select: {
+              username: true,
+              id: true
+            }
+          }
         },
       }
     }
