@@ -14,21 +14,32 @@ export default defineEventHandler(async (event) => {
     omit: {
       password: true,
     },
-      where: { id: userId },
+    where: { id: userId },
     include: {
       followers: {
         select: {
-          username: true
+          username: true,
+          points: {
+            select: {
+              points: true
+            }
+          }
         }
       },
       following: {
         select: {
-          username: true
+          username: true,
+          points: {
+            select: {
+              points: true
+            }
+          }
         }
       },
       points: {
         select: {
-          points: true
+          points: true,
+          reason: true,
         }
       },
       challengesCreated: {
