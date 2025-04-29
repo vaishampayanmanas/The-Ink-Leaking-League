@@ -2,9 +2,7 @@
   <div class="page">
     <Sidebar :links="sidebarLinks" />
     <div class="content">
-      <NuxtLink to="/profile/search">
-        <SearchBox />
-      </NuxtLink>
+      <SearchBox @update="onSearch($event)" />
       <ClientOnly >
         <Stats :stats="stats"/>
       </ClientOnly>
@@ -195,7 +193,16 @@ const followers = ref([
     points: 430,
     link: '/profile/ninateal'
   },
-])
+]);
+
+const onSearch = function (search: string) {
+  navigateTo({
+    path: '/profile/search',
+    query: {
+      search: search
+    }
+  })
+}
 </script>
 
 <style scoped lang="scss">

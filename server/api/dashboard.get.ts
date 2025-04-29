@@ -40,6 +40,7 @@ export default defineEventHandler(async (event) => {
         select: {
           points: true,
           reason: true,
+          createdAt: true,
         }
       },
       challengesCreated: {

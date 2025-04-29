@@ -1,16 +1,30 @@
 <template>
   <div class="search-box">
     <div class="search-box__input">
-      <input type="text" placeholder="Search..." />
+      <input type="text" placeholder="Search..." v-model="model" @keypress="onInput($event)" />
     </div>
     <div class="search-box__button">
-      <button>Search</button>
+      <button @click="onSubmit">Search</button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+const model = defineModel({
+  type: String,
+  default: ''
+});
+const emit = defineEmits(['update']);
 
+const onInput = (evt: KeyboardEvent) => {
+  if (evt.key === 'Enter') {
+    emit('update');
+  }
+}
+
+const onSubmit = () => {
+  emit('update');
+}
 </script>
 
 <style scoped lang="scss">
@@ -33,7 +47,7 @@ $gold: #ffb400;
 
   input {
     width: 100%;
-    padding: 5px;
+    padding: 8px;
     border: none;
     border-radius: 5px;
     font-size: 1rem;
@@ -47,7 +61,7 @@ $gold: #ffb400;
   }
 }
 
-.search-box__button {
+.search-box__button button {
   padding: 5px 10px;
   background-color: $gold;
   color: $white;
@@ -57,7 +71,7 @@ $gold: #ffb400;
   font-size: 1rem;
   transition: background-color 0.3s;
   font-family: 'Roboto Mono', monospace;
-  font-weight: 700;
+  font-weight: 300;
   margin-left: 10px;
 }
 </style>
