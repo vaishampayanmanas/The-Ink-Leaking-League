@@ -18,7 +18,6 @@
 interface Friend {
   name: string
   points: number
-  link: string
 }
 
 const { friends } = defineProps({

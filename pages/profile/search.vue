@@ -17,7 +17,6 @@
 interface Friend {
   name: string
   points: number
-  link: string
 }
 
 const users = await $fetch('/api/auth/users');
@@ -34,7 +33,6 @@ const onSearch = function () {
     searches.value = users.filter(user => user.username.includes(search.value)).map(user => ({
       name: user.username,
       points: user.points.map(point => point.points).reduce((acc, val) => acc + val, 0),
-      link: `/profile/${user.username}`
     }));
   }
 }

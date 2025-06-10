@@ -1,17 +1,14 @@
 <template>
-  <NuxtLink :to="friend.link">
-    <div class="friend-card">
-      <h1>{{ friend.name }}</h1>
-      <p>{{ friend.points }}pts</p>
+  <div class="friend-card">
+    <h1>{{ friend.name }}</h1>
+    <p>{{ friend.points }}pts</p>
   </div>
-  </NuxtLink>
 </template>
 
 <script lang="ts" setup>
 interface Friend {
   name: string
   points: number
-  link: string
 }
 
 const { friend } = defineProps({
